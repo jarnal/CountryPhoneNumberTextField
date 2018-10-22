@@ -14,4 +14,5 @@ Pod::Spec.new do |s|
   s.frameworks  = "Foundation"
   s.dependency 'SnapKit'
   s.dependency 'PhoneNumberKit'
+  s.dependency 'CountryPickerTextfield'
 end
