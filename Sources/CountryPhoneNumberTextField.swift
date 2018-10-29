@@ -21,14 +21,18 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     @IBInspectable
     open var buttonTextColor: UIColor? = UIColor.black {
         didSet {
-            countryLeftView.buttonTextColor = buttonTextColor
+            if countryLeftView != nil {
+                countryLeftView?.buttonTextColor = buttonTextColor
+            }
         }
     }
     
     @IBInspectable
     open var toolbarTintColor: UIColor? = UIColor.red {
         didSet {
-            countryLeftView.toolbarTintColor = toolbarTintColor
+            if countryLeftView != nil {
+                countryLeftView?.toolbarTintColor = toolbarTintColor
+            }
         }
     }
     
@@ -36,19 +40,35 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     public var previousInputAccessoryView: UIView?
     
     // TextField custom left view
-    public var countryLeftView: CountryLeftView!
+    public var countryLeftView: CountryLeftView?
     
     open override var inputAccessoryView: UIView? {
         didSet {
-            if countryLeftView.isCountryToolbar(thisAccessoryView: inputAccessoryView) == false {
+            if countryLeftView?.isCountryToolbar(thisAccessoryView: inputAccessoryView) == false {
                 previousInputAccessoryView = inputAccessoryView
             }
         }
     }
     
-    required public convenience init(forceRegionTo region: String?, buttonTitleMode: CountryButtonTitleMode) {
+    //****************************************************
+    // MARK: - Country Contextable Initialization Conformance
+    //****************************************************
+    
+    public required convenience init(forceRegionTo region: String?, buttonTitleMode: CountryButtonTitleMode = .none) {
         self.init(frame: CGRect.zero)
-        countryLeftView = buildCountryLeftView(forceRegionTo: region, buttonTitleMode: buttonTitleMode)
+        self.countryLeftView = buildCountryLeftView(forceRegionTo: region, buttonTitleMode: buttonTitleMode)
+        setupUI()
+    }
+    
+    public required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.countryLeftView = buildCountryLeftView(forceRegionTo: nil, buttonTitleMode: .none)
+        setupUI()
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.countryLeftView = buildCountryLeftView(forceRegionTo: nil, buttonTitleMode: .none)
         setupUI()
     }
     
@@ -60,7 +80,7 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        countryLeftView.frame = CGRect(x: 0, y: 0, width: leftViewMinSize.width, height: self.bounds.height)
+        countryLeftView?.frame = CGRect(x: 0, y: 0, width: leftViewMinSize.width, height: self.bounds.height)
     }
     
     open override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
@@ -80,7 +100,7 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
         set {
             let (finalText, country) = parseInput(input: newValue)
             if let unwrappedCountry = country {
-                countryLeftView.updateCountry(unwrappedCountry)
+                countryLeftView?.updateCountry(unwrappedCountry)
                 defaultRegion = unwrappedCountry.code
             }
             super.text = finalText
@@ -126,7 +146,7 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
         
         guard let unwrappedInput = input else { return (nil, nil) }
         
-        if unwrappedInput.first == "+", let getDialCode = Tools.getDialCode(forPhoneNumber: unwrappedInput), let phoneCountry = countryLeftView.getCountry(withDialCode: getDialCode) {
+        if unwrappedInput.first == "+", let getDialCode = Tools.getDialCode(forPhoneNumber: unwrappedInput), let phoneCountry = countryLeftView?.getCountry(withDialCode: getDialCode) {
             return (getFinalText(baseText: unwrappedInput, andCountry: phoneCountry), phoneCountry)
         } else if let currentCountry = selectedCountry {
             return (getFinalText(baseText: unwrappedInput, andCountry: currentCountry), currentCountry)
