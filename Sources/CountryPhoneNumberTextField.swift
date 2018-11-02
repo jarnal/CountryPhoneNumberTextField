@@ -13,7 +13,7 @@ import CountryPickerTextfield
 
 @IBDesignable
 open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable {
-
+    
     //****************************************************
     // MARK: - TextField Country Contextable Boilerplate
     //****************************************************
@@ -21,18 +21,14 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     @IBInspectable
     open var buttonTextColor: UIColor? = UIColor.black {
         didSet {
-            if countryLeftView != nil {
-                countryLeftView?.buttonTextColor = buttonTextColor
-            }
+            countryLeftView?.buttonTextColor = buttonTextColor
         }
     }
     
     @IBInspectable
     open var toolbarTintColor: UIColor? = UIColor.red {
         didSet {
-            if countryLeftView != nil {
-                countryLeftView?.toolbarTintColor = toolbarTintColor
-            }
+            countryLeftView?.toolbarTintColor = toolbarTintColor
         }
     }
     
@@ -41,6 +37,9 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     
     // TextField custom left view
     public var countryLeftView: CountryLeftView?
+    
+    // Delegate
+    public weak var countryEventDelegate: CountryContextableDelegate?
     
     open override var inputAccessoryView: UIView? {
         didSet {
@@ -88,7 +87,7 @@ open class CountryPhoneNumberTextField: PhoneNumberTextField, CountryContextable
     }
     
     open override func caretRect(for position: UITextPosition) -> CGRect {
-        return inputAccessoryView == nil ? super.caretRect(for: position) : CGRect.zero
+        return countryLeftView?.isCountryToolbar(thisAccessoryView: inputAccessoryView) == false ? super.caretRect(for: position) : CGRect.zero
     }
     
     //****************************************************

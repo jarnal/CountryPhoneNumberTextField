@@ -7,7 +7,7 @@ source 'https://github.com/jarnal/PodsRepository.git'
 def shared_pods
     pod 'PhoneNumberKit', '~> 2.1'
     pod 'SnapKit', '~> 4.0.0'
-    pod 'CountryPickerTextfield', '~> 0.5'
+    pod 'CountryPickerTextfield', '~> 0.6'
 end
 
 target 'CountryPhoneNumberTextField-iOS' do

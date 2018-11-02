@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CountryPhoneNumberTextField"
-  s.version      = "0.2"
+  s.version      = "0.3"
   s.summary      = "TextField with country selection capability allowing to format phone numbers"
   s.description  = <<-DESC
     Textfield allowing to parse/format/validate international phone numbers and to select related country.
